@@ -1,24 +1,25 @@
+const URL = "https://fakestoreapi.com/products"
+
+
+// Las distintas funciones de crud poseen distintas maneras de manejar los errores y devuelve los mismos en como un array con el objeto error
 async function getAllProducts() {
     try {
-        const response = await fetch("https://fakestoreapi.com/products");
+        const response = await fetch(URL);
         const data = await response.json();
         return data
 
     } catch (error) {
-
         return [{ error: `products does not exist` }]
     }
-
 }
 
 async function getProductById(id) {
     try {
-        const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+        const response = await fetch(`${URL}/${id}`);
         const data = await response.json()
         return data
 
     } catch (error) {
-
         return [{ error: `product with id: ${id} does not exist` }]
     }
 }
@@ -29,7 +30,7 @@ async function addProduct(title, price, category) {
         const product = { title, price: parseFloat(price), category };
 
         if(product.title && !isNaN(product.price) && product.category){
-            const response = await fetch('https://fakestoreapi.com/products', {
+            const response = await fetch(URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(product)
@@ -46,18 +47,16 @@ async function addProduct(title, price, category) {
         }
 
     } catch (error) {
-
         return [{ error: `product ${title} cannot be added` }]
     }
 }
 
 async function deleteProduct(id) {
     try {
-        const response = await fetch(`https://fakestoreapi.com/products/${id}`, {
+        const response = await fetch(`${URL}/${id}`, {
             method: 'DELETE'
         })
         const data = await response.json()
-        // console.log(`product ${data.title} with id: ${data.id} deleted`)
         if (data){
             return data
         } else {
@@ -65,7 +64,6 @@ async function deleteProduct(id) {
         }
 
     } catch (error) {
-
         return [{ error: `product with id ${id} cannot be deleted` }]
     }
 }
