@@ -25,7 +25,6 @@ async function getProductById(id) {
 }
 
 async function addProduct(title, price, category) {
-
     try {
         const product = { title, price: parseFloat(price), category };
 
