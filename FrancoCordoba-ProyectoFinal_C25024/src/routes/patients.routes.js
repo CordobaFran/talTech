@@ -4,6 +4,7 @@ import { Router } from "express";
 const patientsRouter = Router()
 
 patientsRouter.get("/", patientsController.getAllpatients)
+patientsRouter.get("/filter", patientsController.getByFilter)
 patientsRouter.post("/", patientsController.createPatient)
 
 

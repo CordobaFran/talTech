@@ -1,14 +1,16 @@
 import { db } from "../config/db.firebase.js";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
-
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
 
 class Patient {
-    constructor(name, lastName, idType, idNum, birth, phone, email, status = "active") {
+    constructor(name, lastName, idType, idNum, insurance, birth, phone, email, status = "active") {
         this.name = name,
             this.lastName = lastName,
             this.idType = idType,
             this.idNum = idNum,
+            this.insurance = insurance,
             this.birth = birth,
             this.phone = phone,
             this.email = email,
@@ -21,6 +23,7 @@ class Patient {
             lastName: this.lastName,
             idType: this.idType,
             idNum: this.idNum,
+            insurance: this.insurance,
             birth: this.birth,
             phone: this.phone,
             email: this.email,
@@ -43,8 +46,8 @@ export const getAllPatients = async () => {
 
 export const createPatient = async (newPatientData) => {
     try {
-        const { name, lastName, idType, idNum, birth, phone, email, status } = newPatientData
-        const newPatient = new Patient(name, lastName, idType, idNum, birth, phone, email, status)
+        const { name, lastName, idType, idNum, insurance, birth, phone, email, status } = newPatientData
+        const newPatient = new Patient(name, lastName, idType, idNum, insurance, birth, phone, email, status)
 
         const docRef = await addDoc(collection(db, "patients"), newPatient.toFirebase()); //no instanciar la clase, se necesta objeto
         return "Document written with ID: ", docRef.id
@@ -54,3 +57,16 @@ export const createPatient = async (newPatientData) => {
     }
 }
 
+export const getPatientsByFilter = async (filterParams) => {
+    console.log(db);
+    const patientsRef = db.collection('patients');
+    const snapshot = await patientsRef.where('name', '==', filterParams.name).get();
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return {};
+    }
+
+    snapshot.forEach(doc => {
+        return { id: doc.id, ...doc.data() };
+    });
+}
