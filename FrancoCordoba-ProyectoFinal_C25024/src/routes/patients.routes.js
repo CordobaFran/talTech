@@ -3,7 +3,9 @@ import { Router } from "express";
 
 const patientsRouter = Router()
 
-patientsRouter.use("/", patientsController.getAllpatients)
+patientsRouter.get("/", patientsController.getAllpatients)
+patientsRouter.post("/", patientsController.createPatient)
+
 
 export default patientsRouter
 

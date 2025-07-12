@@ -1,4 +1,4 @@
-import { getAllPatients } from "../models/patients.model.js"
+import { getAllPatients, createPatient } from "../models/patients.model.js"
 
 const getAll = async () => {
     return await getAllPatients()
@@ -8,8 +8,8 @@ const getByFilter = async (params) => {
     
 }
 
-const create = async (params) => {
-    
+const create = async (newPatientData) => {
+    return await createPatient(newPatientData)
 }
 
 const deleteData = async (params) => {

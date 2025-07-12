@@ -9,6 +9,8 @@ app.set("PORT", 3000)
 
 
 app.use(cors())
+app.use(express.json())
+
 app.use("/api/v1/patients", patientsRouter)
 
 app.listen(app.get("PORT"), ()=>{

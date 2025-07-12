@@ -25,11 +25,13 @@ const getByFilter = async () => {
     }
 }
 
-const createPatient = async () => {
+const createPatient = async (req,res) => {
     try {
+        const newPatientData = req.body
+        const newPatient = await patientsServices.create(newPatientData)
         res
         .status(200)
-        .json({message: "list of Patients", payload: Patients})
+        .json({message: "patient written with ID", payload: newPatient})
     } catch (error) {
         res
         .status(500)
