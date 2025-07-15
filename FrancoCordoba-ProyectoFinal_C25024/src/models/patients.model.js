@@ -1,8 +1,8 @@
 import { db } from "../config/db.firebase.js";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
+// const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+// const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
 
 class Patient {
     constructor(name, lastName, idType, idNum, insurance, birth, phone, email, status = "active") {
@@ -58,15 +58,20 @@ export const createPatient = async (newPatientData) => {
 }
 
 export const getPatientsByFilter = async (filterParams) => {
-    console.log(db);
-    const patientsRef = db.collection('patients');
-    const snapshot = await patientsRef.where('name', '==', filterParams.name).get();
-    if (snapshot.empty) {
-        console.log('No matching documents.');
-        return {};
-    }
+    // console.log(db);
+    // const patientsRef = db.collection('patients');
+    // const snapshot = await patientsRef.where('name', '==', filterParams.name).get();
+    // if (snapshot.empty) {
+    //     console.log('No matching documents.');
+    //     return {};
+    // }
+    const queryDb = query(collection(db, 'patients'), where('name','==', filterParams.name ))
 
+    const snapshot = await getDocs(queryDb)
+    
     snapshot.forEach(doc => {
+        
+        console.log({...doc.data()})
         return { id: doc.id, ...doc.data() };
     });
 }

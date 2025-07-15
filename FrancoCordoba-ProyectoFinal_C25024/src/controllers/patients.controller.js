@@ -29,10 +29,12 @@ const getByFilter = async (req, res) => {
         res
             .status(200)
             .json({ message: "filtered patients", payload: filteredPatients })
+
     } catch (error) {
         res
             .status(500)
             .json({ message: "internal server error", error: error.message })
+            
     }
 }
 
