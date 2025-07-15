@@ -1,5 +1,6 @@
 import patientsServices from "../services/patients.services.js";
 
+/* GET PATIENTS */
 const getAllpatients = async (req, res) => {
     try {
         const patients = await patientsServices.getAll()
@@ -23,9 +24,7 @@ const getByFilter = async (req, res) => {
             status: req.query.status || null
         }
 
-        console.log(filterParams);
-
-        const filteredPatients = patientsServices.getByFilter(filterParams)
+        const filteredPatients = await patientsServices.getByFilter(filterParams)
         res
             .status(200)
             .json({ message: "filtered patients", payload: filteredPatients })
@@ -34,10 +33,11 @@ const getByFilter = async (req, res) => {
         res
             .status(500)
             .json({ message: "internal server error", error: error.message })
-            
+
     }
 }
 
+/* CREATE PATIENTS */
 const createPatient = async (req, res) => {
     try {
         const newPatientData = req.body
@@ -45,6 +45,7 @@ const createPatient = async (req, res) => {
         res
             .status(200)
             .json({ message: "patient written with ID", payload: newPatient })
+
     } catch (error) {
         res
             .status(500)
@@ -52,11 +53,15 @@ const createPatient = async (req, res) => {
     }
 }
 
-const deletePatient = async () => {
+/* DELETE PATIENT */
+const deletePatient = async (req, res) => {
     try {
+        const id = req.params.id
+        const deletedPatient = await patientsServices.deleteData(id)
         res
             .status(200)
-            .json({ message: "list of Patients", payload: Patients })
+            .json({ message: "patient deleted with id", payload: { id: deletedPatient } })
+
     } catch (error) {
         res
             .status(500)
@@ -64,11 +69,16 @@ const deletePatient = async () => {
     }
 }
 
-const editPatient = async () => {
+/* EDIT PATIENT */
+const editPatient = async (req, res) => {
     try {
+        const id = req.params.id
+        const newData = req.body
+        const editPatient = await patientsServices.editById(id, newData)
         res
             .status(200)
-            .json({ message: "list of Patients", payload: Patients })
+            .json({ message: "list of Patients", payload: {id: editPatient} })
+
     } catch (error) {
         res
             .status(500)
